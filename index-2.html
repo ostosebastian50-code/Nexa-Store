@@ -1,0 +1,4099 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+<meta name="theme-color" content="#050b13">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<title>Nexa Store</title>
+
+<style>
+
+:root{
+  --bg:#050b13;
+  --bg2:#08111d;
+  --card:#0b1725;
+  --card2:#0e1c2c;
+  --line:rgba(255,255,255,.07);
+  --text:#f4f8fc;
+  --muted:#8c9caf;
+  --blue:#168cff;
+  --blue2:#00c8ff;
+  --cyan:#00d9ff;
+  --green:#25d366;
+  --danger:#ff5266;
+  --shadow:0 18px 50px rgba(0,0,0,.38);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html{
+  background:var(--bg);
+  scroll-behavior:smooth;
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(0,150,255,.13),transparent 34%),
+    var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow-x:hidden;
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+  color:inherit;
+}
+
+img{
+  max-width:100%;
+  display:block;
+}
+
+/* =========================
+   SPLASH
+========================= */
+
+.splash{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:#040a12;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.5s ease;
+}
+
+.splash.hide{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+
+.splash-content{
+  text-align:center;
+  animation:splashIn .7s ease both;
+}
+
+.splash-logo{
+  width:82px;
+  height:82px;
+  margin:auto;
+  border-radius:24px;
+  background:
+    linear-gradient(145deg,#0b2540,#06111d);
+  border:1px solid rgba(0,200,255,.35);
+  box-shadow:
+    0 0 35px rgba(0,170,255,.22),
+    inset 0 1px rgba(255,255,255,.08);
+  display:grid;
+  place-items:center;
+  font-size:42px;
+  font-weight:900;
+  color:#08cfff;
+  letter-spacing:-4px;
+}
+
+.splash-title{
+  margin-top:20px;
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.splash-title span{
+  color:var(--cyan);
+}
+
+.splash-sub{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.splash-loader{
+  width:90px;
+  height:3px;
+  margin:25px auto 0;
+  overflow:hidden;
+  border-radius:10px;
+  background:#132235;
+}
+
+.splash-loader::after{
+  content:"";
+  display:block;
+  width:45%;
+  height:100%;
+  background:linear-gradient(90deg,var(--blue),var(--cyan));
+  animation:splashLoad 1.2s ease infinite;
+}
+
+@keyframes splashIn{
+  from{
+    opacity:0;
+    transform:translateY(15px) scale(.96);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+@keyframes splashLoad{
+  from{transform:translateX(-130%)}
+  to{transform:translateX(300%)}
+}
+
+/* =========================
+   APP
+========================= */
+
+.app{
+  width:100%;
+  max-width:620px;
+  min-height:100vh;
+  margin:auto;
+  padding-bottom:95px;
+}
+
+.screen{
+  display:none;
+  min-height:100vh;
+}
+
+.screen.active{
+  display:block;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:
+    env(safe-area-inset-top)
+    18px 0;
+  background:rgba(5,11,19,.86);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.045);
+}
+
+.topbar-inner{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:env(safe-area-inset-top);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.brand-icon{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#102a45,#07121f);
+  border:1px solid rgba(0,200,255,.25);
+  color:var(--cyan);
+  font-size:21px;
+  font-weight:900;
+  box-shadow:0 8px 25px rgba(0,130,255,.12);
+}
+
+.brand-text{
+  font-weight:900;
+  font-size:17px;
+  letter-spacing:.8px;
+}
+
+.brand-text span{
+  color:var(--cyan);
+}
+
+.top-actions{
+  display:flex;
+  gap:8px;
+}
+
+.icon-btn{
+  width:40px;
+  height:40px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  background:#0a1624;
+  border:1px solid var(--line);
+  font-size:17px;
+  position:relative;
+}
+
+.icon-btn:active{
+  transform:scale(.94);
+}
+
+.badge{
+  position:absolute;
+  top:-4px;
+  right:-3px;
+  min-width:17px;
+  height:17px;
+  padding:0 4px;
+  border-radius:20px;
+  display:grid;
+  place-items:center;
+  background:var(--blue);
+  color:#fff;
+  font-size:9px;
+  font-weight:800;
+  border:2px solid var(--bg);
+}
+
+/* =========================
+   HOME
+========================= */
+
+.home-content{
+  padding:22px 16px 20px;
+}
+
+.welcome{
+  margin-bottom:21px;
+}
+
+.welcome-small{
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:5px;
+}
+
+.welcome h1{
+  font-size:27px;
+  line-height:1.15;
+  letter-spacing:-.8px;
+}
+
+.welcome h1 span{
+  color:var(--cyan);
+}
+
+.search{
+  height:50px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:0 15px;
+  border-radius:16px;
+  background:#091523;
+  border:1px solid var(--line);
+  margin-bottom:20px;
+}
+
+.search-icon{
+  color:#71839a;
+  font-size:17px;
+}
+
+.search input{
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#fff;
+  font-size:13px;
+}
+
+.search input::placeholder{
+  color:#65778b;
+}
+
+/* promo */
+
+.promo{
+  position:relative;
+  overflow:hidden;
+  border-radius:23px;
+  min-height:158px;
+  padding:23px 20px;
+  margin-bottom:25px;
+  background:
+    radial-gradient(circle at 90% 20%,rgba(0,200,255,.25),transparent 35%),
+    linear-gradient(135deg,#0b2740,#07121e);
+  border:1px solid rgba(0,174,255,.17);
+  box-shadow:var(--shadow);
+}
+
+.promo::before{
+  content:"";
+  position:absolute;
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  right:-70px;
+  bottom:-80px;
+  border:1px solid rgba(0,204,255,.15);
+}
+
+.promo::after{
+  content:"";
+  position:absolute;
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  right:15px;
+  top:-60px;
+  background:rgba(0,190,255,.08);
+  filter:blur(3px);
+}
+
+.promo-content{
+  position:relative;
+  z-index:2;
+  max-width:78%;
+}
+
+.promo-tag{
+  display:inline-flex;
+  padding:6px 9px;
+  border-radius:8px;
+  background:rgba(0,202,255,.1);
+  border:1px solid rgba(0,202,255,.17);
+  color:#5cddff;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+
+.promo h2{
+  font-size:21px;
+  line-height:1.2;
+  margin-bottom:6px;
+}
+
+.promo p{
+  color:#91a6bb;
+  font-size:11px;
+  line-height:1.5;
+}
+
+/* section */
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:0 2px 13px;
+}
+
+.section-head h2{
+  font-size:17px;
+}
+
+.section-head span{
+  color:#6d8096;
+  font-size:10px;
+}
+
+/* games */
+
+.games{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.game-card{
+  overflow:hidden;
+  border-radius:20px;
+  background:
+    linear-gradient(145deg,#0c1a29,#08121e);
+  border:1px solid var(--line);
+  box-shadow:0 10px 30px rgba(0,0,0,.22);
+  transition:.22s ease;
+}
+
+.game-card:active{
+  transform:scale(.975);
+}
+
+.game-image{
+  height:145px;
+  position:relative;
+  overflow:hidden;
+  background:#09121d;
+}
+
+.game-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:.35s ease;
+}
+
+.game-card:hover .game-image img{
+  transform:scale(1.04);
+}
+
+.game-image::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to top,
+    rgba(4,10,16,.75),
+    transparent 60%
+  );
+}
+
+.game-status{
+  position:absolute;
+  z-index:2;
+  left:9px;
+  top:9px;
+  padding:5px 7px;
+  border-radius:7px;
+  background:rgba(3,9,15,.72);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.08);
+  color:#75e6ff;
+  font-size:8px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+
+.game-body{
+  padding:13px;
+}
+
+.game-body h3{
+  font-size:14px;
+  margin-bottom:4px;
+}
+
+.game-body p{
+  color:#718298;
+  font-size:10px;
+  margin-bottom:11px;
+}
+
+.game-open{
+  height:34px;
+  width:100%;
+  border-radius:10px;
+  background:#10243a;
+  border:1px solid rgba(0,170,255,.13);
+  color:#71dfff;
+  font-size:10px;
+  font-weight:800;
+}
+
+/* =========================
+   PRODUCT
+========================= */
+
+.product-wrap{
+  padding-bottom:20px;
+}
+
+.product-top{
+  height:62px;
+  padding:0 16px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.back-btn{
+  width:40px;
+  height:40px;
+  border-radius:13px;
+  background:#0a1624;
+  border:1px solid var(--line);
+  display:grid;
+  place-items:center;
+  font-size:21px;
+}
+
+.product-top-title{
+  font-weight:800;
+  font-size:15px;
+}
+
+.product-hero{
+  margin:0 16px;
+  height:215px;
+  overflow:hidden;
+  border-radius:24px;
+  position:relative;
+  border:1px solid var(--line);
+  background:#08131f;
+  box-shadow:var(--shadow);
+}
+
+.product-hero img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.product-hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(to top,rgba(4,9,15,.82),transparent 55%);
+}
+
+.product-info{
+  position:absolute;
+  z-index:2;
+  bottom:17px;
+  left:18px;
+}
+
+.product-info h1{
+  font-size:25px;
+  margin-bottom:4px;
+}
+
+.product-info p{
+  color:#9eb0c3;
+  font-size:11px;
+}
+
+.product-content{
+  padding:22px 16px;
+}
+
+.field-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:9px;
+  font-size:11px;
+  font-weight:800;
+  color:#b8c7d6;
+}
+
+.field-hint{
+  color:#64768a;
+  font-weight:500;
+  font-size:9px;
+}
+
+.package-select{
+  min-height:52px;
+  padding:0 14px;
+  border-radius:15px;
+  background:#091624;
+  border:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+}
+
+.package-current{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.package-icon{
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  background:rgba(0,184,255,.1);
+  display:grid;
+  place-items:center;
+  color:var(--cyan);
+}
+
+.package-current strong{
+  font-size:12px;
+}
+
+.package-current small{
+  display:block;
+  color:#6e8195;
+  margin-top:2px;
+  font-size:9px;
+}
+
+.package-arrow{
+  color:#6d8093;
+}
+
+.package-menu{
+  margin-top:7px;
+  border-radius:15px;
+  overflow:hidden;
+  background:#091624;
+  border:1px solid var(--line);
+  display:none;
+}
+
+.package-menu.show{
+  display:block;
+  animation:menuIn .18s ease both;
+}
+
+@keyframes menuIn{
+  from{
+    opacity:0;
+    transform:translateY(-5px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+.package-option{
+  min-height:53px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 14px;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+
+.package-option:last-child{
+  border-bottom:0;
+}
+
+.package-option-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.package-option-left strong{
+  font-size:11px;
+}
+
+.package-option-left small{
+  display:block;
+  color:#6f8297;
+  font-size:8px;
+  margin-top:3px;
+}
+
+.package-price{
+  color:#56dfff;
+  font-size:11px;
+  font-weight:900;
+}
+
+.quantity-row{
+  margin-top:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:13px 14px;
+  border-radius:15px;
+  background:#091624;
+  border:1px solid var(--line);
+}
+
+.quantity-title{
+  font-size:11px;
+  font-weight:800;
+}
+
+.quantity-controls{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.quantity-btn{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:#102237;
+  border:1px solid rgba(255,255,255,.06);
+  font-size:17px;
+  color:#bcd0e3;
+}
+
+.quantity-value{
+  min-width:18px;
+  text-align:center;
+  font-size:13px;
+  font-weight:900;
+}
+
+.id-box{
+  margin-top:18px;
+}
+
+.input{
+  width:100%;
+  height:52px;
+  padding:0 14px;
+  border-radius:15px;
+  background:#091624;
+  border:1px solid var(--line);
+  outline:0;
+  color:#fff;
+  font-size:13px;
+}
+
+.input:focus{
+  border-color:rgba(0,190,255,.45);
+  box-shadow:0 0 0 3px rgba(0,190,255,.06);
+}
+
+.payment-section{
+  margin-top:20px;
+}
+
+.payment-methods{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.payment-btn{
+  min-height:67px;
+  border-radius:16px;
+  background:#091624;
+  border:1px solid var(--line);
+  padding:10px;
+  text-align:left;
+  transition:.2s;
+}
+
+.payment-btn.active{
+  border-color:rgba(0,197,255,.55);
+  background:
+    linear-gradient(145deg,rgba(0,140,255,.12),rgba(0,210,255,.04));
+  box-shadow:0 0 0 1px rgba(0,190,255,.05);
+}
+
+.payment-icon{
+  font-size:17px;
+  margin-bottom:5px;
+}
+
+.payment-btn strong{
+  display:block;
+  font-size:10px;
+}
+
+.payment-btn small{
+  color:#687c91;
+  font-size:8px;
+}
+
+.total-box{
+  margin-top:18px;
+  padding:17px;
+  border-radius:18px;
+  background:
+    linear-gradient(145deg,#0c1d2e,#091522);
+  border:1px solid rgba(0,173,255,.13);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.total-label{
+  color:#778ba0;
+  font-size:10px;
+}
+
+.total-box strong{
+  color:#6de5ff;
+  font-size:20px;
+}
+
+.product-actions{
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  gap:10px;
+  margin-top:15px;
+}
+
+.btn{
+  height:51px;
+  border-radius:15px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.btn-secondary{
+  background:#0b1928;
+  border:1px solid var(--line);
+  color:#a9bdd0;
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,#087ef2,#00bde8);
+  color:#fff;
+  box-shadow:0 12px 28px rgba(0,150,255,.18);
+}
+
+/* =========================
+   CART
+========================= */
+
+.page-content{
+  padding:20px 16px;
+}
+
+.page-title{
+  margin-bottom:18px;
+}
+
+.page-title small{
+  display:block;
+  color:#718398;
+  font-size:10px;
+  margin-bottom:5px;
+}
+
+.page-title h1{
+  font-size:25px;
+}
+
+.cart-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.cart-item{
+  padding:14px;
+  border-radius:17px;
+  background:#091624;
+  border:1px solid var(--line);
+}
+
+.cart-item-top{
+  display:flex;
+  gap:11px;
+}
+
+.cart-thumb{
+  width:53px;
+  height:53px;
+  flex:none;
+  border-radius:13px;
+  overflow:hidden;
+  background:#0d1d2d;
+}
+
+.cart-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.cart-item-info{
+  min-width:0;
+  flex:1;
+}
+
+.cart-item-info h3{
+  font-size:12px;
+  margin-bottom:4px;
+}
+
+.cart-item-info p{
+  color:#718499;
+  font-size:9px;
+  line-height:1.5;
+}
+
+.cart-item-price{
+  color:#67ddff;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.cart-item-bottom{
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.04);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.cart-mini-controls{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.mini-btn{
+  width:28px;
+  height:28px;
+  border-radius:8px;
+  background:#102235;
+  color:#b5c9db;
+}
+
+.remove-btn{
+  color:#ff6575;
+  background:transparent;
+  font-size:10px;
+}
+
+.cart-summary{
+  margin-top:16px;
+  padding:17px;
+  border-radius:19px;
+  background:#091624;
+  border:1px solid var(--line);
+}
+
+.summary-line{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:9px;
+  color:#7d90a4;
+  font-size:10px;
+}
+
+.summary-line:last-child{
+  margin-bottom:0;
+  padding-top:11px;
+  border-top:1px solid var(--line);
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+}
+
+.summary-line strong{
+  color:#62ddff;
+}
+
+.cart-action{
+  margin-top:12px;
+}
+
+/* =========================
+   CHECKOUT
+========================= */
+
+.checkout-card{
+  padding:17px;
+  border-radius:19px;
+  background:#091624;
+  border:1px solid var(--line);
+  margin-bottom:12px;
+}
+
+.checkout-title{
+  font-size:12px;
+  font-weight:900;
+  margin-bottom:13px;
+}
+
+.checkout-payment{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.checkout-pay{
+  min-height:48px;
+  border-radius:12px;
+  background:#0d1c2b;
+  border:1px solid var(--line);
+  font-size:10px;
+  font-weight:800;
+}
+
+.checkout-pay.active{
+  border-color:rgba(0,190,255,.45);
+  color:#62ddff;
+  background:rgba(0,170,255,.08);
+}
+
+.payment-data{
+  margin-top:13px;
+  padding:12px;
+  border-radius:12px;
+  background:#07111d;
+  border:1px solid rgba(255,255,255,.04);
+}
+
+.payment-data div{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:7px;
+  font-size:9px;
+}
+
+.payment-data div:last-child{
+  margin-bottom:0;
+}
+
+.payment-data span:first-child{
+  color:#65798e;
+}
+
+.payment-data span:last-child{
+  color:#dce8f3;
+  font-weight:800;
+  text-align:right;
+}
+
+.checkout-note{
+  color:#71859a;
+  font-size:9px;
+  line-height:1.6;
+  margin-top:12px;
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-head{
+  padding:22px 16px;
+}
+
+.profile-card{
+  padding:22px;
+  border-radius:23px;
+  background:
+    radial-gradient(circle at 80% 0%,rgba(0,183,255,.11),transparent 35%),
+    linear-gradient(145deg,#0b1a2a,#08131f);
+  border:1px solid var(--line);
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+
+.avatar{
+  width:86px;
+  height:86px;
+  border-radius:50%;
+  margin:0 auto 13px;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  background:#0f2439;
+  border:2px solid rgba(0,194,255,.3);
+  font-size:40px;
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.profile-card h2{
+  font-size:19px;
+  margin-bottom:3px;
+}
+
+.profile-card p{
+  color:#71859a;
+  font-size:10px;
+}
+
+.profile-actions{
+  margin-top:15px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.profile-btn{
+  height:40px;
+  border-radius:11px;
+  background:#102235;
+  color:#a9bfd2;
+  border:1px solid var(--line);
+  font-size:9px;
+  font-weight:800;
+}
+
+.profile-section{
+  margin-top:15px;
+}
+
+.profile-option{
+  min-height:57px;
+  padding:0 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-radius:15px;
+  background:#091624;
+  border:1px solid var(--line);
+  margin-bottom:8px;
+}
+
+.profile-option-left{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.profile-option-icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:#102337;
+  display:grid;
+  place-items:center;
+}
+
+.profile-option strong{
+  display:block;
+  font-size:11px;
+}
+
+.profile-option small{
+  display:block;
+  margin-top:3px;
+  color:#687c90;
+  font-size:8px;
+}
+
+.profile-option > span{
+  color:#60758a;
+}
+
+/* =========================
+   ORDERS
+========================= */
+
+.orders-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.order-card{
+  padding:15px;
+  border-radius:17px;
+  background:#091624;
+  border:1px solid var(--line);
+}
+
+.order-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:11px;
+}
+
+.order-id{
+  font-size:10px;
+  color:#8194a8;
+}
+
+.order-status{
+  padding:5px 7px;
+  border-radius:7px;
+  color:#58df9a;
+  background:rgba(37,211,102,.08);
+  font-size:8px;
+  font-weight:800;
+}
+
+.order-game{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.order-game-thumb{
+  width:45px;
+  height:45px;
+  border-radius:11px;
+  overflow:hidden;
+}
+
+.order-game-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.order-game h3{
+  font-size:11px;
+}
+
+.order-game p{
+  margin-top:4px;
+  color:#71859a;
+  font-size:9px;
+}
+
+.order-total{
+  margin-top:11px;
+  padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.04);
+  display:flex;
+  justify-content:space-between;
+  font-size:10px;
+  color:#73879b;
+}
+
+.order-total strong{
+  color:#61ddff;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty{
+  min-height:55vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:30px;
+}
+
+.empty-icon{
+  width:72px;
+  height:72px;
+  border-radius:23px;
+  background:#0b1a29;
+  border:1px solid var(--line);
+  display:grid;
+  place-items:center;
+  font-size:30px;
+  margin-bottom:15px;
+}
+
+.empty h2{
+  font-size:17px;
+  margin-bottom:7px;
+}
+
+.empty p{
+  max-width:280px;
+  color:#708398;
+  font-size:10px;
+  line-height:1.6;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav{
+  position:fixed;
+  z-index:100;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:620px;
+  padding:
+    9px 12px
+    calc(9px + env(safe-area-inset-bottom));
+  background:rgba(5,11,19,.91);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(255,255,255,.06);
+}
+
+.nav-inner{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:5px;
+}
+
+.nav-btn{
+  min-height:53px;
+  border-radius:14px;
+  background:transparent;
+  color:#61758a;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  position:relative;
+}
+
+.nav-btn.active{
+  color:#5bdcff;
+  background:rgba(0,172,255,.07);
+}
+
+.nav-icon{
+  font-size:18px;
+  line-height:1;
+}
+
+.nav-label{
+  font-size:8px;
+  font-weight:800;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+  position:fixed;
+  z-index:500;
+  left:50%;
+  bottom:86px;
+  transform:translate(-50%,20px);
+  width:max-content;
+  max-width:calc(100% - 30px);
+  padding:12px 15px;
+  border-radius:13px;
+  background:#101e2d;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 15px 40px rgba(0,0,0,.4);
+  color:#e8f2fa;
+  font-size:10px;
+  font-weight:700;
+  opacity:0;
+  visibility:hidden;
+  transition:.25s;
+}
+
+.toast.show{
+  opacity:1;
+  visibility:visible;
+  transform:translate(-50%,0);
+}
+
+/* =========================
+   SUCCESS ORDER
+========================= */
+
+.order-success{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:rgba(2,7,13,.88);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:25px;
+}
+
+.order-success.show{
+  display:flex;
+}
+
+.order-success-box{
+  width:min(340px,100%);
+  padding:32px 22px;
+  text-align:center;
+  border-radius:28px;
+  background:linear-gradient(145deg,#0d1e31,#08111d);
+  border:1px solid rgba(37,211,102,.3);
+  box-shadow:0 25px 80px rgba(0,0,0,.55);
+  animation:successBox .35s ease both;
+}
+
+.success-check{
+  width:82px;
+  height:82px;
+  margin:0 auto 18px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:rgba(37,211,102,.13);
+  border:2px solid #25d366;
+  color:#25d366;
+  font-size:42px;
+  animation:successPop .55s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.order-success h2{
+  font-size:22px;
+  margin-bottom:7px;
+}
+
+.order-success p{
+  color:#8fa0b4;
+  font-size:11px;
+  line-height:1.6;
+}
+
+.success-loader{
+  width:34px;
+  height:4px;
+  border-radius:10px;
+  background:#173047;
+  overflow:hidden;
+  margin:18px auto 0;
+}
+
+.success-loader::after{
+  content:"";
+  display:block;
+  width:50%;
+  height:100%;
+  background:#25d366;
+  animation:successLoad 1.5s linear forwards;
+}
+
+@keyframes successPop{
+  0%{
+    transform:scale(.3);
+    opacity:0;
+  }
+  70%{
+    transform:scale(1.08);
+    opacity:1;
+  }
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+@keyframes successBox{
+  from{
+    transform:translateY(12px);
+    opacity:0;
+  }
+  to{
+    transform:translateY(0);
+    opacity:1;
+  }
+}
+
+@keyframes successLoad{
+  from{transform:translateX(-100%)}
+  to{transform:translateX(200%)}
+}
+
+/* =========================
+   MODALS
+========================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:400;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(8px);
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:100%;
+  max-width:620px;
+  max-height:82vh;
+  overflow:auto;
+  padding:20px 16px calc(25px + env(safe-area-inset-bottom));
+  border-radius:25px 25px 0 0;
+  background:#091624;
+  border-top:1px solid rgba(255,255,255,.08);
+  animation:modalUp .25s ease both;
+}
+
+.modal-handle{
+  width:40px;
+  height:4px;
+  border-radius:10px;
+  background:#26394c;
+  margin:0 auto 20px;
+}
+
+.modal-title{
+  font-size:17px;
+  margin-bottom:16px;
+}
+
+.avatar-options{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+}
+
+.avatar-choice{
+  aspect-ratio:1;
+  border-radius:15px;
+  background:#0d1d2d;
+  border:1px solid var(--line);
+  font-size:25px;
+}
+
+.avatar-choice:active{
+  transform:scale(.94);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(min-width:520px){
+  .home-content,
+  .page-content{
+    padding-left:20px;
+    padding-right:20px;
+  }
+
+  .product-content{
+    padding-left:20px;
+    padding-right:20px;
+  }
+
+  .product-hero{
+    margin-left:20px;
+    margin-right:20px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     SPLASH
+========================= -->
+
+<div class="splash" id="splash">
+  <div class="splash-content">
+    <div class="splash-logo">N</div>
+    <div class="splash-title">NEXA <span>STORE</span></div>
+    <div class="splash-sub">Gaming top-up</div>
+    <div class="splash-loader"></div>
+  </div>
+</div>
+
+<div class="app">
+
+<!-- =========================
+     HOME
+========================= -->
+
+<section class="screen active" id="homeScreen">
+
+  <header class="topbar">
+    <div class="topbar-inner">
+
+      <div class="brand">
+        <div class="brand-icon">N</div>
+        <div class="brand-text">
+          NEXA <span>STORE</span>
+        </div>
+      </div>
+
+      <div class="top-actions">
+
+        <button class="icon-btn" onclick="openCart()">
+          🛒
+          <span class="badge" id="cartBadge">0</span>
+        </button>
+
+        <button class="icon-btn" onclick="showScreen('profile')">
+          👤
+        </button>
+
+      </div>
+
+    </div>
+  </header>
+
+  <main class="home-content">
+
+    <div class="welcome">
+      <div class="welcome-small">Bienvenido a</div>
+      <h1>Nexa <span>Store</span> 🎮</h1>
+    </div>
+
+    <div class="search">
+      <span class="search-icon">⌕</span>
+      <input
+        id="gameSearch"
+        type="text"
+        placeholder="Buscar un juego..."
+        oninput="filterGames()"
+      >
+    </div>
+
+    <div class="promo">
+      <div class="promo-content">
+        <div class="promo-tag">⚡ Recargas rápidas</div>
+        <h2>Tu juego.<br>Tu recarga.</h2>
+        <p>
+          Compra tus diamantes y monedas
+          de forma rápida y sencilla.
+        </p>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>Juegos disponibles</h2>
+      <span id="gameCount"></span>
+    </div>
+
+    <div class="games" id="gamesContainer"></div>
+
+  </main>
+
+</section>
+
+
+<!-- =========================
+     PRODUCT
+========================= -->
+
+<section class="screen" id="productScreen">
+
+  <div class="product-wrap">
+
+    <div class="product-top">
+
+      <button class="back-btn" onclick="showScreen('home')">
+        ‹
+      </button>
+
+      <div class="product-top-title" id="productTopTitle">
+        Recarga
+      </div>
+
+    </div>
+
+    <div class="product-hero">
+
+      <img id="productHeroImage" src="" alt="Juego">
+
+      <div class="product-info">
+        <h1 id="productTitle"></h1>
+        <p id="productSubtitle"></p>
+      </div>
+
+    </div>
+
+    <div class="product-content">
+
+      <div class="field-title">
+        <span>Selecciona tu recarga</span>
+        <span class="field-hint">Paquete</span>
+      </div>
+
+      <div class="package-select" onclick="togglePackageMenu()">
+
+        <div class="package-current">
+
+          <div class="package-icon">💎</div>
+
+          <div>
+            <strong id="selectedPackageText">
+              Selecciona un paquete
+            </strong>
+
+            <small id="selectedPackageSub">
+              -
+            </small>
+          </div>
+
+        </div>
+
+        <div class="package-arrow">⌄</div>
+
+      </div>
+
+      <div class="package-menu" id="packageMenu"></div>
+
+
+      <div class="quantity-row">
+
+        <div class="quantity-title">
+          Cantidad
+        </div>
+
+        <div class="quantity-controls">
+
+          <button class="quantity-btn" onclick="changeQuantity(-1)">
+            −
+          </button>
+
+          <div class="quantity-value" id="quantityValue">
+            1
+          </div>
+
+          <button class="quantity-btn" onclick="changeQuantity(1)">
+            +
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="id-box">
+
+        <div class="field-title">
+          <span>ID del jugador</span>
+          <span class="field-hint">Mínimo 8 dígitos</span>
+        </div>
+
+        <input
+          class="input"
+          id="playerId"
+          type="text"
+          inputmode="numeric"
+          autocomplete="off"
+          minlength="8"
+          pattern="[0-9]{8,}"
+          placeholder="Escribe el ID de tu cuenta"
+          oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+        >
+
+      </div>
+
+
+      <div class="payment-section">
+
+        <div class="field-title">
+          <span>Método de pago</span>
+          <span class="field-hint">Selecciona uno</span>
+        </div>
+
+        <div class="payment-methods">
+
+          <button
+            class="payment-btn active"
+            id="paymentBs"
+            onclick="setPayment('bs')"
+          >
+
+            <div class="payment-icon">🇻🇪</div>
+            <strong>Pago Móvil</strong>
+            <small>Bolívares · Bs</small>
+
+          </button>
+
+          <button
+            class="payment-btn"
+            id="paymentPix"
+            onclick="setPayment('pix')"
+          >
+
+            <div class="payment-icon">🇧🇷</div>
+            <strong>Pix</strong>
+            <small>Reales · R$</small>
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="total-box">
+
+        <span class="total-label">
+          Total a pagar
+        </span>
+
+        <strong id="productTotal">
+          Bs 0,00
+        </strong>
+
+      </div>
+
+
+      <div class="product-actions">
+
+        <button
+          class="btn btn-secondary"
+          onclick="addToCart()"
+        >
+          🛒 Añadir
+        </button>
+
+        <button
+          class="btn btn-primary"
+          onclick="buyNow()"
+        >
+          Comprar ahora
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     CART
+========================= -->
+
+<section class="screen" id="cartScreen">
+
+  <div class="topbar">
+    <div class="topbar-inner">
+
+      <div class="brand">
+        <div class="brand-icon">N</div>
+        <div class="brand-text">
+          NEXA <span>STORE</span>
+        </div>
+      </div>
+
+      <button class="icon-btn" onclick="showScreen('home')">
+        ×
+      </button>
+
+    </div>
+  </div>
+
+  <main class="page-content">
+
+    <div class="page-title">
+      <small>TU COMPRA</small>
+      <h1>Carrito</h1>
+    </div>
+
+    <div id="cartContent"></div>
+
+  </main>
+
+</section>
+
+
+<!-- =========================
+     CHECKOUT
+========================= -->
+
+<section class="screen" id="checkoutScreen">
+
+  <div class="topbar">
+    <div class="topbar-inner">
+
+      <div class="brand">
+        <button
+          class="back-btn"
+          onclick="showScreen('cart')"
+          style="margin-right:8px"
+        >
+          ‹
+        </button>
+
+        <div class="brand-text">
+          Finalizar <span>pedido</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <main class="page-content">
+
+    <div id="checkoutContent"></div>
+
+  </main>
+
+</section>
+
+
+<!-- =========================
+     PROFILE
+========================= -->
+
+<section class="screen" id="profileScreen">
+
+  <div class="topbar">
+    <div class="topbar-inner">
+
+      <div class="brand">
+        <div class="brand-icon">N</div>
+        <div class="brand-text">
+          NEXA <span>STORE</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <main class="profile-head">
+
+    <div class="profile-card">
+
+      <div class="avatar" id="profileAvatar">
+        🎮
+      </div>
+
+      <h2 id="profileName">
+        Jugador
+      </h2>
+
+      <p>
+        Cuenta Nexa Store
+      </p>
+
+      <div class="profile-actions">
+
+        <button
+          class="profile-btn"
+          onclick="openAvatarModal()"
+        >
+          ✨ Cambiar avatar
+        </button>
+
+        <button
+          class="profile-btn"
+          onclick="openPhotoPicker()"
+        >
+          📷 Foto
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="profile-section">
+
+      <div
+        class="profile-option"
+        onclick="showOrders()"
+      >
+
+        <div class="profile-option-left">
+
+          <div class="profile-option-icon">
+            📦
+          </div>
+
+          <div>
+            <strong>Mis pedidos</strong>
+            <small>Consulta tus compras</small>
+          </div>
+
+        </div>
+
+        <span>›</span>
+
+      </div>
+
+
+      <div
+        class="profile-option"
+        onclick="openCart()"
+      >
+
+        <div class="profile-option-left">
+
+          <div class="profile-option-icon">
+            🛒
+          </div>
+
+          <div>
+            <strong>Mi carrito</strong>
+            <small>Productos pendientes</small>
+          </div>
+
+        </div>
+
+        <span>›</span>
+
+      </div>
+
+
+      <div class="profile-option">
+
+        <div class="profile-option-left">
+
+          <div class="profile-option-icon">
+            🛡️
+          </div>
+
+          <div>
+            <strong>Cuenta Nexa Store</strong>
+            <small>Tus datos se guardan en este dispositivo</small>
+          </div>
+
+        </div>
+
+        <span>✓</span>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</section>
+
+
+<!-- =========================
+     ORDERS
+========================= -->
+
+<section class="screen" id="ordersScreen">
+
+  <div class="topbar">
+    <div class="topbar-inner">
+
+      <div class="brand">
+
+        <button
+          class="back-btn"
+          onclick="showScreen('profile')"
+          style="margin-right:8px"
+        >
+          ‹
+        </button>
+
+        <div class="brand-text">
+          Mis <span>pedidos</span>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <main class="page-content">
+
+    <div id="ordersContent"></div>
+
+  </main>
+
+</section>
+
+
+</div>
+
+
+<!-- =========================
+     BOTTOM NAV
+========================= -->
+
+<nav class="bottom-nav">
+
+  <div class="nav-inner">
+
+    <button
+      class="nav-btn active"
+      id="navHome"
+      onclick="showScreen('home')"
+    >
+      <span class="nav-icon">⌂</span>
+      <span class="nav-label">Inicio</span>
+    </button>
+
+    <button
+      class="nav-btn"
+      id="navCart"
+      onclick="openCart()"
+    >
+      <span class="nav-icon">🛒</span>
+      <span class="nav-label">Carrito</span>
+    </button>
+
+    <button
+      class="nav-btn"
+      id="navOrders"
+      onclick="showOrders()"
+    >
+      <span class="nav-icon">📦</span>
+      <span class="nav-label">Pedidos</span>
+    </button>
+
+    <button
+      class="nav-btn"
+      id="navProfile"
+      onclick="showScreen('profile')"
+    >
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Perfil</span>
+    </button>
+
+  </div>
+
+</nav>
+
+
+<!-- =========================
+     TOAST
+========================= -->
+
+<div class="toast" id="toast"></div>
+
+
+<!-- =========================
+     SUCCESS
+========================= -->
+
+<div class="order-success" id="orderSuccess">
+
+  <div class="order-success-box">
+
+    <div class="success-check">
+      ✓
+    </div>
+
+    <h2>
+      ¡Pedido realizado!
+    </h2>
+
+    <p>
+      Tu pedido fue preparado correctamente.<br>
+      Abriendo WhatsApp...
+    </p>
+
+    <div class="success-loader"></div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     AVATAR MODAL
+========================= -->
+
+<div class="modal" id="avatarModal">
+
+  <div class="modal-box">
+
+    <div class="modal-handle"></div>
+
+    <div class="modal-title">
+      Elige tu avatar
+    </div>
+
+    <div class="avatar-options">
+
+      <button class="avatar-choice" onclick="selectAvatar('🎮')">🎮</button>
+      <button class="avatar-choice" onclick="selectAvatar('🔥')">🔥</button>
+      <button class="avatar-choice" onclick="selectAvatar('⚡')">⚡</button>
+      <button class="avatar-choice" onclick="selectAvatar('👾')">👾</button>
+      <button class="avatar-choice" onclick="selectAvatar('😎')">😎</button>
+      <button class="avatar-choice" onclick="selectAvatar('🎯')">🎯</button>
+      <button class="avatar-choice" onclick="selectAvatar('💎')">💎</button>
+      <button class="avatar-choice" onclick="selectAvatar('🚀')">🚀</button>
+      <button class="avatar-choice" onclick="selectAvatar('🐺')">🐺</button>
+      <button class="avatar-choice" onclick="selectAvatar('👑')">👑</button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<input
+  type="file"
+  id="photoInput"
+  accept="image/*"
+  hidden
+>
+
+
+<script>
+
+/* =====================================================
+   NEXA STORE
+===================================================== */
+
+
+/* =========================
+   GAMES
+========================= */
+
+const games = {
+
+  freefire:{
+    id:"freefire",
+    name:"Free Fire",
+    subtitle:"Diamantes",
+
+    image:"https://cdn.phototourl.com/free/2026-09-21-e1879a2c-4750-431b-8d1c-54b673f578e5.jpg",
+
+    packages:[
+      {amount:110, unit:"diamantes", bs:7, pix:7},
+      {amount:220, unit:"diamantes", bs:14, pix:14},
+      {amount:341, unit:"diamantes", bs:18, pix:18},
+      {amount:572, unit:"diamantes", bs:27, pix:27},
+      {amount:1166, unit:"diamantes", bs:50, pix:50},
+      {amount:1738, unit:"diamantes", bs:77, pix:77},
+      {amount:2398, unit:"diamantes", bs:95, pix:95},
+      {amount:6160, unit:"diamantes", bs:230, pix:230}
+    ]
+  },
+
+  bloodstrike:{
+    id:"bloodstrike",
+    name:"Blood Strike",
+    subtitle:"Gold",
+    image:"https://upload.wikimedia.org/wikipedia/commons/4/43/Blood_strike.jpg",
+
+    packages:[
+      {amount:105, unit:"Gold", bs:2, pix:2},
+      {amount:320, unit:"Gold", bs:6, pix:6},
+      {amount:540, unit:"Gold", bs:10, pix:10},
+      {amount:1100, unit:"Gold", bs:20, pix:20},
+      {amount:2260, unit:"Gold", bs:40, pix:40},
+      {amount:5800, unit:"Gold", bs:100, pix:100}
+    ]
+  }
+
+};
+
+
+/* =========================
+   PAYMENT
+========================= */
+
+const paymentInfo = {
+
+  bs:{
+    name:"Pago Móvil",
+    currency:"Bs",
+    bank:"Venezuela (0102)",
+    phone:"04147604669",
+    id:"V17047936"
+  },
+
+  pix:{
+    name:"Pix",
+    currency:"R$",
+    cpf:"092.632.502-78"
+  }
+
+};
+
+
+/* =========================
+   STATE
+========================= */
+
+let state = {
+
+  screen:"home",
+
+  selectedGame:null,
+
+  selectedPackage:null,
+
+  payment:"bs",
+
+  quantity:1,
+
+  cart:JSON.parse(
+    localStorage.getItem("nexaCart") || "[]"
+  ),
+
+  profile:
+    JSON.parse(
+      localStorage.getItem("nexaProfile") || "null"
+    ) || {
+
+      name:"Jugador",
+      avatar:"🎮",
+      photo:null
+
+    },
+
+  orders:
+    JSON.parse(
+      localStorage.getItem("nexaOrders") || "[]"
+    ),
+
+  packageMenu:false
+
+};
+
+let orderSending=false;
+
+
+/* =========================
+   STORAGE
+========================= */
+
+function saveCart(){
+
+  localStorage.setItem(
+    "nexaCart",
+    JSON.stringify(state.cart)
+  );
+
+  updateCartBadge();
+
+}
+
+
+function saveProfile(){
+
+  localStorage.setItem(
+    "nexaProfile",
+    JSON.stringify(state.profile)
+  );
+
+}
+
+
+function saveOrders(){
+
+  localStorage.setItem(
+    "nexaOrders",
+    JSON.stringify(state.orders)
+  );
+
+}
+
+
+/* =========================
+   MONEY
+========================= */
+
+function money(value){
+
+  const currency =
+    state.payment === "pix"
+      ? "R$"
+      : "Bs";
+
+  return currency + " " +
+    Number(value)
+      .toFixed(2)
+      .replace(".",",");
+
+}
+
+
+function moneyItem(value,payment){
+
+  const currency =
+    payment === "pix"
+      ? "R$"
+      : "Bs";
+
+  return currency + " " +
+    Number(value)
+      .toFixed(2)
+      .replace(".",",");
+
+}
+
+
+function packagePrice(pkg){
+
+  return state.payment === "pix"
+    ? pkg.pix
+    : pkg.bs;
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function showScreen(screen){
+
+  state.screen=screen;
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(el=>{
+      el.classList.remove("active");
+    });
+
+
+  const map = {
+
+    home:"homeScreen",
+    product:"productScreen",
+    cart:"cartScreen",
+    checkout:"checkoutScreen",
+    profile:"profileScreen",
+    orders:"ordersScreen"
+
+  };
+
+
+  const target =
+    document.getElementById(map[screen]);
+
+  if(target){
+    target.classList.add("active");
+  }
+
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(el=>{
+      el.classList.remove("active");
+    });
+
+
+  if(screen==="home"){
+    document.getElementById("navHome")
+      ?.classList.add("active");
+  }
+
+  if(screen==="cart"){
+    document.getElementById("navCart")
+      ?.classList.add("active");
+  }
+
+  if(screen==="orders"){
+    document.getElementById("navOrders")
+      ?.classList.add("active");
+  }
+
+  if(screen==="profile"){
+    document.getElementById("navProfile")
+      ?.classList.add("active");
+  }
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"instant"
+  });
+
+
+  if(screen==="cart"){
+    renderCart();
+  }
+
+  if(screen==="checkout"){
+    renderCheckout();
+  }
+
+  if(screen==="profile"){
+    renderProfile();
+  }
+
+  if(screen==="orders"){
+    renderOrders();
+  }
+
+}
+
+
+function openCart(){
+
+  showScreen("cart");
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function renderGames(list=Object.values(games)){
+
+  const container =
+    document.getElementById("gamesContainer");
+
+  document.getElementById("gameCount").textContent =
+    list.length + (list.length===1 ? " juego" : " juegos");
+
+
+  if(!list.length){
+
+    container.innerHTML=`
+
+      <div class="empty" style="grid-column:1/-1;min-height:40vh">
+
+        <div class="empty-icon">
+          🔎
+        </div>
+
+        <h2>No encontramos juegos</h2>
+
+        <p>
+          Intenta buscar con otro nombre.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML = list.map(game=>`
+
+    <article
+      class="game-card"
+      onclick="openGame('${game.id}')"
+    >
+
+      <div class="game-image">
+
+        <img
+          src="${game.image}"
+          alt="${game.name}"
+          loading="lazy"
+        >
+
+        <div class="game-status">
+          Disponible
+        </div>
+
+      </div>
+
+      <div class="game-body">
+
+        <h3>${game.name}</h3>
+
+        <p>
+          ${game.subtitle}
+        </p>
+
+        <button
+          class="game-open"
+          onclick="event.stopPropagation();openGame('${game.id}')"
+        >
+          Ver recargas
+        </button>
+
+      </div>
+
+    </article>
+
+  `).join("");
+
+}
+
+
+function filterGames(){
+
+  const value =
+    document
+      .getElementById("gameSearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const list =
+    Object.values(games)
+      .filter(game=>
+        game.name
+          .toLowerCase()
+          .includes(value)
+      );
+
+
+  renderGames(list);
+
+}
+
+
+/* =========================
+   PRODUCT
+========================= */
+
+function openGame(id){
+
+  const game=games[id];
+
+  if(!game) return;
+
+
+  state.selectedGame=id;
+
+  state.selectedPackage=game.packages[0];
+
+  state.payment="bs";
+
+  state.quantity=1;
+
+  state.packageMenu=false;
+
+
+  document.getElementById("productHeroImage").src =
+    game.image;
+
+  document.getElementById("productHeroImage").alt =
+    game.name;
+
+  document.getElementById("productTitle").textContent =
+    game.name;
+
+  document.getElementById("productTopTitle").textContent =
+    "Recarga " + game.name;
+
+  document.getElementById("productSubtitle").textContent =
+    "Recarga rápida y segura";
+
+
+  document.getElementById("quantityValue").textContent =
+    "1";
+
+
+  document.getElementById("playerId").value="";
+
+
+  renderPackageMenu();
+
+  updateProductSelection();
+
+  updatePaymentButtons();
+
+  showScreen("product");
+
+}
+
+
+function renderPackageMenu(){
+
+  const game=games[state.selectedGame];
+
+  if(!game) return;
+
+
+  const menu =
+    document.getElementById("packageMenu");
+
+
+  menu.innerHTML =
+    game.packages.map((pkg,index)=>`
+
+      <div
+        class="package-option"
+        onclick="selectPackage(${index})"
+      >
+
+        <div class="package-option-left">
+
+          <div class="package-icon">
+            💎
+          </div>
+
+          <div>
+
+            <strong>
+              ${pkg.amount.toLocaleString("es-ES")}
+              ${pkg.unit}
+            </strong>
+
+            <small>
+              Paquete disponible
+            </small>
+
+          </div>
+
+        </div>
+
+        <div class="package-price">
+          ${money(packagePrice(pkg))}
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+function togglePackageMenu(){
+
+  const menu =
+    document.getElementById("packageMenu");
+
+  state.packageMenu =
+    !state.packageMenu;
+
+  menu.classList.toggle(
+    "show",
+    state.packageMenu
+  );
+
+}
+
+
+function selectPackage(index){
+
+  const game=games[state.selectedGame];
+
+  state.selectedPackage =
+    game.packages[index];
+
+  state.packageMenu=false;
+
+  document
+    .getElementById("packageMenu")
+    .classList.remove("show");
+
+
+  updateProductSelection();
+
+}
+
+
+function updateProductSelection(){
+
+  const pkg=state.selectedPackage;
+
+  if(!pkg) return;
+
+
+  document.getElementById(
+    "selectedPackageText"
+  ).textContent =
+    pkg.amount.toLocaleString("es-ES") +
+    " " +
+    pkg.unit;
+
+
+  document.getElementById(
+    "selectedPackageSub"
+  ).textContent =
+    "Precio " +
+    paymentInfo[state.payment].name;
+
+
+  document.getElementById(
+    "productTotal"
+  ).textContent =
+    money(packagePrice(pkg) * state.quantity);
+
+
+  renderPackageMenu();
+
+}
+
+
+function changeQuantity(amount){
+
+  state.quantity += amount;
+
+  if(state.quantity<1){
+    state.quantity=1;
+  }
+
+  if(state.quantity>99){
+    state.quantity=99;
+  }
+
+
+  document.getElementById(
+    "quantityValue"
+  ).textContent =
+    state.quantity;
+
+
+  updateProductSelection();
+
+}
+
+
+/* =========================
+   PAYMENT
+========================= */
+
+function setPayment(payment){
+
+  state.payment=payment;
+
+  updatePaymentButtons();
+
+  updateProductSelection();
+
+}
+
+
+function updatePaymentButtons(){
+
+  document
+    .getElementById("paymentBs")
+    .classList.toggle(
+      "active",
+      state.payment==="bs"
+    );
+
+
+  document
+    .getElementById("paymentPix")
+    .classList.toggle(
+      "active",
+      state.payment==="pix"
+    );
+
+}
+
+
+/* =========================
+   PLAYER ID
+========================= */
+
+function getPlayerId(){
+
+  const input =
+    document.getElementById("playerId");
+
+  input.value =
+    input.value.replace(/[^0-9]/g,"");
+
+  const playerId =
+    input.value.trim();
+
+
+  if(playerId.length < 8){
+
+    toast("El ID debe tener mínimo 8 dígitos.");
+
+    input.focus();
+
+    return null;
+
+  }
+
+
+  return playerId;
+
+}
+
+
+/* =========================
+   ADD CART
+========================= */
+
+function addToCart(){
+
+  if(!state.selectedGame ||
+     !state.selectedPackage){
+
+    toast("Selecciona una recarga.");
+    return;
+
+  }
+
+
+  const playerId=getPlayerId();
+
+
+  if(!playerId){
+
+    return;
+
+  }
+
+
+  const game=games[state.selectedGame];
+
+  const pkg=state.selectedPackage;
+
+
+  const item={
+
+    id:Date.now(),
+
+    gameId:game.id,
+
+    gameName:game.name,
+
+    image:game.image,
+
+    amount:pkg.amount,
+
+    unit:pkg.unit,
+
+    playerId:playerId,
+
+    quantity:state.quantity,
+
+    payment:state.payment,
+
+    currency:
+      paymentInfo[state.payment].currency,
+
+    packagePrice:
+      packagePrice(pkg)
+
+  };
+
+
+  state.cart.push(item);
+
+  saveCart();
+
+  toast("✓ Añadido al carrito");
+
+}
+
+
+function buyNow(){
+
+  if(!state.selectedGame ||
+     !state.selectedPackage){
+
+    toast("Selecciona una recarga.");
+    return;
+
+  }
+
+
+  const playerId=getPlayerId();
+
+
+  if(!playerId){
+
+    return;
+
+  }
+
+
+  const game=games[state.selectedGame];
+
+  const pkg=state.selectedPackage;
+
+
+  state.cart=[{
+
+    id:Date.now(),
+
+    gameId:game.id,
+
+    gameName:game.name,
+
+    image:game.image,
+
+    amount:pkg.amount,
+
+    unit:pkg.unit,
+
+    playerId:playerId,
+
+    quantity:state.quantity,
+
+    payment:state.payment,
+
+    currency:
+      paymentInfo[state.payment].currency,
+
+    packagePrice:
+      packagePrice(pkg)
+
+  }];
+
+
+  saveCart();
+
+  showScreen("checkout");
+
+}
+
+
+/* =========================
+   CART
+========================= */
+
+function updateCartBadge(){
+
+  const count =
+    state.cart.reduce(
+      (sum,item)=>sum+item.quantity,
+      0
+    );
+
+
+  document.getElementById(
+    "cartBadge"
+  ).textContent =
+    count>99 ? "99+" : count;
+
+}
+
+
+function changeCartQuantity(id,amount){
+
+  const item =
+    state.cart.find(x=>x.id===id);
+
+  if(!item) return;
+
+
+  item.quantity += amount;
+
+
+  if(item.quantity<=0){
+
+    state.cart =
+      state.cart.filter(x=>x.id!==id);
+
+  }
+
+
+  saveCart();
+
+  renderCart();
+
+}
+
+
+function removeCartItem(id){
+
+  state.cart =
+    state.cart.filter(
+      x=>x.id!==id
+    );
+
+  saveCart();
+
+  renderCart();
+
+  toast("Producto eliminado.");
+
+}
+
+
+function renderCart(){
+
+  const container =
+    document.getElementById("cartContent");
+
+
+  if(!state.cart.length){
+
+    container.innerHTML=`
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          🛒
+        </div>
+
+        <h2>Tu carrito está vacío</h2>
+
+        <p>
+          Elige un juego y agrega una recarga
+          para comenzar tu pedido.
+        </p>
+
+        <button
+          class="btn btn-primary"
+          style="margin-top:18px;width:180px"
+          onclick="showScreen('home')"
+        >
+          Ver juegos
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const total =
+    state.cart.reduce(
+      (sum,item)=>
+        sum +
+        item.packagePrice *
+        item.quantity,
+      0
+    );
+
+
+  const currency =
+    state.cart[0].currency;
+
+
+  container.innerHTML=`
+
+    <div class="cart-list">
+
+      ${state.cart.map(item=>`
+
+        <div class="cart-item">
+
+          <div class="cart-item-top">
+
+            <div class="cart-thumb">
+              <img
+                src="${item.image}"
+                alt="${item.gameName}"
+              >
+            </div>
+
+            <div class="cart-item-info">
+
+              <h3>
+                ${item.gameName}
+              </h3>
+
+              <p>
+                ${item.amount.toLocaleString("es-ES")}
+                ${item.unit}<br>
+                ID: ${item.playerId}<br>
+                ${item.payment==="pix" ? "Pix" : "Pago Móvil"}
+              </p>
+
+            </div>
+
+            <div class="cart-item-price">
+              ${moneyItem(
+                item.packagePrice * item.quantity,
+                item.payment
+              )}
+            </div>
+
+          </div>
+
+
+          <div class="cart-item-bottom">
+
+            <div class="cart-mini-controls">
+
+              <button
+                class="mini-btn"
+                onclick="changeCartQuantity(${item.id},-1)"
+              >
+                −
+              </button>
+
+              <strong style="font-size:10px">
+                ${item.quantity}
+              </strong>
+
+              <button
+                class="mini-btn"
+                onclick="changeCartQuantity(${item.id},1)"
+              >
+                +
+              </button>
+
+            </div>
+
+            <button
+              class="remove-btn"
+              onclick="removeCartItem(${item.id})"
+            >
+              Eliminar
+            </button>
+
+          </div>
+
+        </div>
+
+      `).join("")}
+
+    </div>
+
+
+    <div class="cart-summary">
+
+      <div class="summary-line">
+        <span>Productos</span>
+        <span>${state.cart.length}</span>
+      </div>
+
+      <div class="summary-line">
+        <span>Unidades</span>
+        <span>
+          ${state.cart.reduce(
+            (s,i)=>s+i.quantity,0
+          )}
+        </span>
+      </div>
+
+      <div class="summary-line">
+        <span>Total</span>
+        <strong>
+          ${currency} ${total
+            .toFixed(2)
+            .replace(".",",")}
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="cart-action">
+
+      <button
+        class="btn btn-primary"
+        style="width:100%"
+        onclick="showScreen('checkout')"
+      >
+        Continuar con el pedido
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================
+   CHECKOUT
+========================= */
+
+function changeCheckoutPayment(payment){
+
+  state.cart =
+    state.cart.map(item=>{
+
+      const game=games[item.gameId];
+
+      const pkg =
+        game.packages.find(
+          p=>p.amount===item.amount
+        );
+
+
+      return {
+
+        ...item,
+
+        payment:payment,
+
+        currency:
+          paymentInfo[payment].currency,
+
+        packagePrice:
+          payment==="pix"
+            ? pkg.pix
+            : pkg.bs
+
+      };
+
+    });
+
+
+  saveCart();
+
+  renderCheckout();
+
+}
+
+
+function renderCheckout(){
+
+  const container =
+    document.getElementById("checkoutContent");
+
+
+  if(!state.cart.length){
+
+    container.innerHTML=`
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          📦
+        </div>
+
+        <h2>No hay pedidos</h2>
+
+        <p>
+          Tu carrito está vacío.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const payment =
+    state.cart[0].payment;
+
+
+  const total =
+    state.cart.reduce(
+      (sum,item)=>
+        sum +
+        item.packagePrice *
+        item.quantity,
+      0
+    );
+
+
+  const info =
+    paymentInfo[payment];
+
+
+  const currency=info.currency;
+
+
+  container.innerHTML=`
+
+    <div class="page-title">
+
+      <small>ÚLTIMO PASO</small>
+
+      <h1>Confirmar pedido</h1>
+
+    </div>
+
+
+    <div class="checkout-card">
+
+      <div class="checkout-title">
+        Método de pago
+      </div>
+
+      <div class="checkout-payment">
+
+        <button
+          class="checkout-pay ${payment==="bs" ? "active" : ""}"
+          onclick="changeCheckoutPayment('bs')"
+        >
+          🇻🇪 Pago Móvil · Bs
+        </button>
+
+        <button
+          class="checkout-pay ${payment==="pix" ? "active" : ""}"
+          onclick="changeCheckoutPayment('pix')"
+        >
+          🇧🇷 Pix · R$
+        </button>
+
+      </div>
+
+
+      <div class="payment-data">
+
+        ${
+          payment==="bs"
+
+          ? `
+
+            <div>
+              <span>Banco</span>
+              <span>${info.bank}</span>
+            </div>
+
+            <div>
+              <span>Teléfono</span>
+              <span>${info.phone}</span>
+            </div>
+
+            <div>
+              <span>Cédula</span>
+              <span>${info.id}</span>
+            </div>
+
+          `
+
+          : `
+
+            <div>
+              <span>CPF</span>
+              <span>${info.cpf}</span>
+            </div>
+
+          `
+        }
+
+      </div>
+
+    </div>
+
+
+    <div class="checkout-card">
+
+      <div class="checkout-title">
+        Resumen del pedido
+      </div>
+
+
+      ${state.cart.map(item=>`
+
+        <div
+          style="
+            display:flex;
+            justify-content:space-between;
+            gap:10px;
+            padding:9px 0;
+            border-bottom:1px solid rgba(255,255,255,.04);
+          "
+        >
+
+          <div>
+
+            <div style="
+              font-size:10px;
+              font-weight:800;
+            ">
+              ${item.gameName}
+            </div>
+
+            <div style="
+              margin-top:3px;
+              color:#708398;
+              font-size:8px;
+            ">
+              ${item.amount.toLocaleString("es-ES")}
+              ${item.unit}
+              × ${item.quantity}
+              · ID ${item.playerId}
+            </div>
+
+          </div>
+
+          <strong style="
+            color:#62ddff;
+            font-size:10px;
+            white-space:nowrap;
+          ">
+            ${moneyItem(
+              item.packagePrice * item.quantity,
+              item.payment
+            )}
+          </strong>
+
+        </div>
+
+      `).join("")}
+
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        padding-top:14px;
+        margin-top:5px;
+      ">
+
+        <span style="
+          color:#8093a7;
+          font-size:11px;
+        ">
+          Total
+        </span>
+
+        <strong style="
+          color:#64e1ff;
+          font-size:18px;
+        ">
+          ${currency}
+          ${total.toFixed(2).replace(".",",")}
+        </strong>
+
+      </div>
+
+
+      <div class="checkout-note">
+
+        Al confirmar, se preparará tu pedido
+        y se abrirá WhatsApp para enviarlo.
+        Verifica que los datos del jugador sean correctos.
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="btn btn-primary"
+      style="width:100%;height:54px"
+      onclick="confirmOrder()"
+    >
+      💬 Confirmar pedido por WhatsApp
+    </button>
+
+  `;
+
+}
+
+
+/* =========================
+   CONFIRM ORDER
+========================= */
+
+function confirmOrder(){
+
+  if(orderSending) return;
+
+
+  if(!state.cart.length){
+
+    toast("El carrito está vacío.");
+
+    return;
+
+  }
+
+
+  orderSending=true;
+
+
+  const cartSnapshot =
+    state.cart.map(item=>({
+      ...item
+    }));
+
+
+  const total =
+    cartSnapshot.reduce(
+      (sum,item)=>
+        sum +
+        item.packagePrice *
+        item.quantity,
+      0
+    );
+
+
+  const payment =
+    cartSnapshot[0].payment;
+
+
+  const currency =
+    cartSnapshot[0].currency;
+
+
+  const orderId = String(Date.now()).slice(-6);
+  const orderDate = new Date().toLocaleString("es-ES",{
+    day:"2-digit",month:"2-digit",year:"numeric",
+    hour:"2-digit",minute:"2-digit"
+  });
+
+  let message =
+    "✨ *NEXA STORE* ✨\n";
+
+  message +=
+    "━━━━━━━━━━━━━━━━━━\n";
+
+  message +=
+    "🛍️ *NUEVO PEDIDO*\n";
+
+  message +=
+    `🔖 *Pedido:* #${orderId}\n`;
+
+  message +=
+    `🕐 *Fecha:* ${orderDate}\n`;
+
+  message +=
+    "━━━━━━━━━━━━━━━━━━\n\n";
+
+  cartSnapshot.forEach((item,index)=>{
+
+    message +=
+      `🎮 *JUEGO*\n${item.gameName}\n\n`;
+
+    message +=
+      `💎 *RECARGA*\n${item.amount.toLocaleString("es-ES")} ${item.unit}\n`;
+
+    message +=
+      `🆔 *ID DEL JUGADOR*\n${item.playerId}\n`;
+
+    message +=
+      `🔢 *CANTIDAD:* ${item.quantity}\n`;
+
+    message +=
+      `💵 *SUBTOTAL:* ${item.currency} ${(item.packagePrice * item.quantity)
+        .toFixed(2)
+        .replace(".",",")}\n`;
+
+    if(index < cartSnapshot.length-1){
+
+      message +=
+        "\n──────────────────\n\n";
+
+    }
+
+  });
+
+  message +=
+    "\n━━━━━━━━━━━━━━━━━━\n";
+
+  message +=
+    `💳 *MÉTODO DE PAGO:* ${payment==="pix" ? "Pix 🇧🇷" : "Pago Móvil 🇻🇪"}\n`;
+
+  message +=
+    `🧾 *TOTAL A PAGAR:* ${currency} ${total
+      .toFixed(2)
+      .replace(".",",")}\n`;
+
+  message +=
+    "━━━━━━━━━━━━━━━━━━\n\n";
+
+  message +=
+    "📌 *ESTADO:* Esperando pago\n";
+
+  message +=
+    "⚡ *Pedido generado desde Nexa Store*\n";
+
+  message +=
+    "🙏 *Gracias por tu compra!*";
+
+
+
+  const order={
+
+    id:Date.now(),
+
+    date:new Date().toISOString(),
+
+    total:total,
+
+    currency:currency,
+
+    payment:payment,
+
+    items:cartSnapshot
+
+  };
+
+
+  state.orders.push(order);
+
+  saveOrders();
+
+
+  const whatsappNumber =
+    "12268608782";
+
+
+  const url =
+    "https://wa.me/" +
+    whatsappNumber +
+    "?text=" +
+    encodeURIComponent(message);
+
+
+  state.cart=[];
+
+  saveCart();
+
+
+  const overlay =
+    document.getElementById("orderSuccess");
+
+
+  if(overlay){
+
+    overlay.classList.add("show");
+
+  }
+
+
+  setTimeout(()=>{
+
+    window.location.href=url;
+
+  },1500);
+
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+function renderProfile(){
+
+  const avatar =
+    document.getElementById("profileAvatar");
+
+
+  const name =
+    document.getElementById("profileName");
+
+
+  name.textContent =
+    state.profile.name || "Jugador";
+
+
+  if(state.profile.photo){
+
+    avatar.innerHTML=`
+
+      <img
+        src="${state.profile.photo}"
+        alt="Perfil"
+      >
+
+    `;
+
+  }else{
+
+    avatar.textContent =
+      state.profile.avatar || "🎮";
+
+  }
+
+}
+
+
+function openAvatarModal(){
+
+  document
+    .getElementById("avatarModal")
+    .classList.add("show");
+
+}
+
+
+function selectAvatar(avatar){
+
+  state.profile.avatar=avatar;
+
+  state.profile.photo=null;
+
+  saveProfile();
+
+  renderProfile();
+
+  document
+    .getElementById("avatarModal")
+    .classList.remove("show");
+
+  toast("✓ Avatar actualizado.");
+
+}
+
+
+function openPhotoPicker(){
+
+  document
+    .getElementById("photoInput")
+    .click();
+
+}
+
+
+document
+  .getElementById("photoInput")
+  .addEventListener(
+    "change",
+    function(){
+
+      const file=this.files[0];
+
+      if(!file) return;
+
+
+      if(!file.type.startsWith("image/")){
+
+        toast("Selecciona una imagen válida.");
+
+        return;
+
+      }
+
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload=function(e){
+
+        state.profile.photo =
+          e.target.result;
+
+        saveProfile();
+
+        renderProfile();
+
+        toast("✓ Foto actualizada.");
+
+      };
+
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+
+/* =========================
+   ORDERS
+========================= */
+
+function showOrders(){
+
+  showScreen("orders");
+
+}
+
+
+function renderOrders(){
+
+  const container =
+    document.getElementById("ordersContent");
+
+
+  if(!state.orders.length){
+
+    container.innerHTML=`
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          📦
+        </div>
+
+        <h2>Aún no tienes pedidos</h2>
+
+        <p>
+          Cuando realices una compra,
+          aparecerá aquí.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const sorted =
+    [...state.orders].reverse();
+
+
+  container.innerHTML=`
+
+    <div class="page-title">
+
+      <small>HISTORIAL</small>
+
+      <h1>Mis pedidos</h1>
+
+    </div>
+
+
+    <div class="orders-list">
+
+      ${sorted.map(order=>{
+
+        const first=order.items[0];
+
+        const date =
+          new Date(order.date)
+            .toLocaleDateString(
+              "es-ES",
+              {
+                day:"2-digit",
+                month:"short",
+                year:"numeric"
+              }
+            );
+
+
+        return `
+
+          <div class="order-card">
+
+            <div class="order-head">
+
+              <span class="order-id">
+                Pedido #${String(order.id).slice(-6)}
+              </span>
+
+              <span class="order-status">
+                Realizado
+              </span>
+
+            </div>
+
+
+            <div class="order-game">
+
+              <div class="order-game-thumb">
+
+                <img
+                  src="${first.image}"
+                  alt="${first.gameName}"
+                >
+
+              </div>
+
+              <div>
+
+                <h3>
+                  ${first.gameName}
+                </h3>
+
+                <p>
+                  ${date}
+                  ·
+                  ${order.payment==="pix"
+                    ? "Pix"
+                    : "Pago Móvil"
+                  }
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="order-total">
+
+              <span>
+                ${order.items.length}
+                producto${order.items.length!==1 ? "s" : ""}
+              </span>
+
+              <strong>
+                ${order.currency}
+                ${order.total
+                  .toFixed(2)
+                  .replace(".",",")}
+              </strong>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }).join("")}
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer=null;
+
+
+function toast(message){
+
+  const el =
+    document.getElementById("toast");
+
+
+  el.textContent=message;
+
+  el.classList.add("show");
+
+
+  clearTimeout(toastTimer);
+
+
+  toastTimer =
+    setTimeout(()=>{
+
+      el.classList.remove("show");
+
+    },2200);
+
+}
+
+
+/* =========================
+   OUTSIDE MODAL
+========================= */
+
+document
+  .getElementById("avatarModal")
+  .addEventListener(
+    "click",
+    function(e){
+
+      if(e.target===this){
+
+        this.classList.remove("show");
+
+      }
+
+    }
+  );
+
+
+/* =========================
+   INIT
+========================= */
+
+function init(){
+
+  renderGames();
+
+  updateCartBadge();
+
+  renderProfile();
+
+}
+
+
+window.addEventListener(
+  "load",
+  ()=>{
+
+    init();
+
+
+    setTimeout(()=>{
+
+      document
+        .getElementById("splash")
+        .classList.add("hide");
+
+    },900);
+
+  }
+);
+
+</script>
+
+</body>
+</html>
