@@ -3601,81 +3601,60 @@ function confirmOrder(){
     cartSnapshot[0].currency;
 
 
-  const orderId = String(Date.now()).slice(-6);
-  const orderDate = new Date().toLocaleString("es-ES",{
-    day:"2-digit",month:"2-digit",year:"numeric",
-    hour:"2-digit",minute:"2-digit"
-  });
-
   let message =
-    "✨ *NEXA STORE* ✨\n";
-
-  message +=
-    "━━━━━━━━━━━━━━━━━━\n";
-
-  message +=
-    "🛍️ *NUEVO PEDIDO*\n";
-
-  message +=
-    `🔖 *Pedido:* #${orderId}\n`;
-
-  message +=
-    `🕐 *Fecha:* ${orderDate}\n`;
+    "🛒 *NUEVO PEDIDO - NEXA STORE*\n";
 
   message +=
     "━━━━━━━━━━━━━━━━━━\n\n";
 
+
   cartSnapshot.forEach((item,index)=>{
 
     message +=
-      `🎮 *JUEGO*\n${item.gameName}\n\n`;
+      `🎮 *Juego:* ${item.gameName}\n`;
 
     message +=
-      `💎 *RECARGA*\n${item.amount.toLocaleString("es-ES")} ${item.unit}\n`;
+      `💎 *Recarga:* ${item.amount.toLocaleString("es-ES")} ${item.unit}\n`;
 
     message +=
-      `🆔 *ID DEL JUGADOR*\n${item.playerId}\n`;
+      `🆔 *ID:* ${item.playerId}\n`;
 
     message +=
-      `🔢 *CANTIDAD:* ${item.quantity}\n`;
+      `🔢 *Cantidad:* ${item.quantity}\n`;
 
     message +=
-      `💵 *SUBTOTAL:* ${item.currency} ${(item.packagePrice * item.quantity)
+      `💰 *Precio:* ${item.currency} ${(item.packagePrice * item.quantity)
         .toFixed(2)
         .replace(".",",")}\n`;
+
 
     if(index < cartSnapshot.length-1){
 
       message +=
-        "\n──────────────────\n\n";
+        "\n──────────────\n\n";
 
     }
 
   });
 
+
   message +=
     "\n━━━━━━━━━━━━━━━━━━\n";
 
   message +=
-    `💳 *MÉTODO DE PAGO:* ${payment==="pix" ? "Pix 🇧🇷" : "Pago Móvil 🇻🇪"}\n`;
+    `💳 *Método:* ${
+      payment==="pix"
+        ? "Pix"
+        : "Pago Móvil"
+    }\n`;
 
   message +=
-    `🧾 *TOTAL A PAGAR:* ${currency} ${total
+    `💰 *TOTAL:* ${currency} ${total
       .toFixed(2)
       .replace(".",",")}\n`;
 
   message +=
-    "━━━━━━━━━━━━━━━━━━\n\n";
-
-  message +=
-    "📌 *ESTADO:* Esperando pago\n";
-
-  message +=
-    "⚡ *Pedido generado desde Nexa Store*\n";
-
-  message +=
-    "🙏 *Gracias por tu compra!*";
-
+    "\n✅ *Pedido realizado desde Nexa Store*";
 
 
   const order={
